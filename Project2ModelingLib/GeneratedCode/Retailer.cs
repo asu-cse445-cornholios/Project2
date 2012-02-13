@@ -8,18 +8,68 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 public class Retailer
 {
-	public virtual void OnPriceCut()
-	{
-		throw new System.NotImplementedException();
-	}
+    public virtual void RetailerFunc()
+    {
+        //ChickenFarm chicken = new ChickenFarm();
+        Order orderObj = new Order();
 
-	public virtual void RetailerFunc()
-	{
-		throw new System.NotImplementedException();
-	}
+        //change n depending on specified retailer #
+        for (int n = 0; n < 10; n++)
+        {
+            //Thread.Sleep(1000);
+            //int p = chicken.GetPrice();
+            //Console.WriteLine("Store{0} has everyday low price: ${1} each", Thread.CurrentThread.Name, p);
 
+            //sends order to encoder
+            string encoded = orderObj.Encode();
+            
+            //get time stamp before sending
+            DateTime timeStamp = orderObj.receiveTime;
+
+            //send encoded string to free cell in multiCellBuffer
+            MultiCellBuffer cell = new MultiCellBuffer();
+            cell.SetOneCell(encoded);
+
+            //order completion received (EVENT SUBSCRIPTION/CALLBACK)
+
+
+            DateTime timeReceive = orderObj.receiveTime;
+            TimeSpan elapsedTime = timeReceive - timeStamp;
+
+            Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
+
+            //few questions:
+            //1) orderTime/receiveTime would have to be public? Or is order time completion handled 
+            //   in the order class, and order time printed out here as opposed to the order completion
+            //   event to be handled by retailer.\?  
+            //2) multiCellBuffer needs to take in a string?
+        }
+    }
+
+	public virtual void OnPriceCut() //event handler
+	{
+        //Each retailer contains a call-back
+        //method (event handler) for the ChickenFarm to call when a price-cut
+        //event occurs. The retailer will calculate the number of chickens 
+        //to order, for example, based on the need and the difference between
+        //the previous price and the current price. The thread will terminate
+        //after the ChickenFarm thread has terminated. 
+
+        ChickenFarm chicken = new ChickenFarm();
+        
+        int currentPrice = chicken.GetPrice();
+        //store previous price shomewhere
+
+        //previousPrice - currentPrice --> what are we doing with this value? return to ChickenFarm
+
+        //Console.WriteLine("Store{0} chickens are on sale: as low as ${1} each", Thread.CurrentThread.Name, p);
+	    
+        //terminate if chickenfarm thread has terminated
+        //Thread.CurrentThread.Suspend;
+    }
 }
 
