@@ -14,16 +14,11 @@ public class Retailer
 {
     public virtual void RetailerFunc()
     {
-        //ChickenFarm chicken = new ChickenFarm();
         Order orderObj = new Order();
 
         //change n depending on specified retailer #
         for (int n = 0; n < 10; n++)
         {
-            //Thread.Sleep(1000);
-            //int p = chicken.GetPrice();
-            //Console.WriteLine("Store{0} has everyday low price: ${1} each", Thread.CurrentThread.Name, p);
-
             //sends order to encoder
             string encoded = orderObj.Encode();
             
@@ -35,7 +30,9 @@ public class Retailer
             cell.SetOneCell(encoded);
 
             //order completion received (EVENT SUBSCRIPTION/CALLBACK)
-
+            //subscription
+            Thread.Sleep(100);
+            //callback
 
             DateTime timeReceive = orderObj.receiveTime;
             TimeSpan elapsedTime = timeReceive - timeStamp;
@@ -69,7 +66,7 @@ public class Retailer
         //Console.WriteLine("Store{0} chickens are on sale: as low as ${1} each", Thread.CurrentThread.Name, p);
 	    
         //terminate if chickenfarm thread has terminated
-        //Thread.CurrentThread.Suspend;
+       // Thread.CurrentThread.Abort;
     }
 }
 
