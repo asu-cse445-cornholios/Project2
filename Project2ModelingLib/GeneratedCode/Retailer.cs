@@ -12,6 +12,7 @@ using System.Threading;
 
 public class Retailer
 {
+    private static Semaphore _sema;
     public virtual void RetailerFunc()
     {
         Order orderObj = new Order();
@@ -30,9 +31,9 @@ public class Retailer
             cell.SetOneCell(encoded);
 
             //order completion received (EVENT SUBSCRIPTION/CALLBACK)
-            //subscription
-            Thread.Sleep(100);
-            //callback
+           //use semaphore
+            _sema.WaitOne();
+            //Thread.Sleep(100);
 
             DateTime timeReceive = orderObj.receiveTime;
             TimeSpan elapsedTime = timeReceive - timeStamp;
