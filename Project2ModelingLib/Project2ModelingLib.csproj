@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{289122B5-B73A-41C7-9955-790810DDAC1A}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Project2ModelingLib</RootNamespace>
     <AssemblyName>Project2ModelingLib</AssemblyName>
@@ -31,8 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Project2Application</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

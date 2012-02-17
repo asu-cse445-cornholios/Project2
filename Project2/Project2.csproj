@@ -50,6 +50,12 @@
     <None Include="App.config" />
     <None Include="Project2.cd" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Project2ModelingLib\Project2ModelingLib.csproj">
+      <Project>{289122B5-B73A-41C7-9955-790810DDAC1A}</Project>
+      <Name>Project2ModelingLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
