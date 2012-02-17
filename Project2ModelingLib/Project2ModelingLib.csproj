@@ -61,6 +61,7 @@
     <Compile Include="GeneratedCode\Retailer.cs">
       <SourceModelReference>modelbus://ModelStoreAdapter.1.0/Project2Modeling/Retailer/C:\P\CSE445\Project2\Project2Modeling\Project2Modeling.modelproj%252f6695c247-bb99-4639-9ef3-9ab57126baa2</SourceModelReference>
     </Compile>
+    <Compile Include="PriceCutEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

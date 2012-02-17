@@ -10,62 +10,44 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-public class Retailer
+namespace Project2ModelingLib
 {
-    private double _previousPrice = 0;
-
-    public virtual void RetailerFunc()
+    public class Retailer
     {
-        Order orderObj = new Order();
+        private double _previousPrice = 0;
 
-        //change n depending on specified retailer #
-        for (int n = 0; n < 10; n++)
+        private static void CallBack(Order orderObj)
         {
-            //sends order to encoder
-            string encoded = orderObj.Encode();
-            
-            orderObj.CreatedTime = DateTime.UtcNow;
+            DateTime timeReceive = DateTime.UtcNow;
+            TimeSpan elapsedTime = timeReceive - orderObj.CreatedTime;
 
-            //send encoded string to free cell in multiCellBuffer
-            MultiCellBuffer cell = new MultiCellBuffer();
-            cell.SetOneCell(encoded);
-        }
-    }
-
-    private static void CallBack(Order orderObj)
-    {
-        DateTime timeReceive = DateTime.UtcNow;
-        TimeSpan elapsedTime = timeReceive - orderObj.CreatedTime;
-
-        Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
-    }
-
-    public virtual void OnPriceCut(object src, EventArgs e) //event handler
-	{
-        //Each retailer contains a call-back
-        //method (event handler) for the ChickenFarm to call when a price-cut
-        //event occurs. The retailer will calculate the number of chickens 
-        //to order, for example, based on the need and the difference between
-        //the previous price and the current price. The thread will terminate
-        //after the ChickenFarm thread has terminated. 
-
-        //if it's 0
-        //set previousprice = to current
-        //else previousPrice - currentPrice
-
-        if (_previousPrice == 0)
-        {
-            _previousPrice = e
-        }
-        else
-        {
-           
+            Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
         }
 
-        Console.WriteLine("Store{0} chickens are on sale: as low as ${1} each", Thread.CurrentThread.Name, p);
-	    
-        //terminate if chickenfarm thread has terminated
-       // Thread.CurrentThread.Abort;
+        public event EventHandler<PriceCutEventArgs> PriceCutEvent;
+
+        public virtual void OnPriceCut(object src, PriceCutEventArgs e) //event handler
+	    {
+            int numChickens;
+
+            if (_previousPrice != 0)
+            {
+                numChickens = 100 + 2 * (int)(_previousPrice - e.Price);
+                
+                Random rand = new Random();
+                Order orderObj = new Order { Amount = numChickens, SenderId = Thread.CurrentThread.Name, 
+                    CreatedTime = DateTime.UtcNow, CardNo = rand.Next(5000,7000)};
+
+                //sends order to encoder
+                string encoded = orderObj.Encode();
+
+                //send encoded string to free cell in multiCellBuffer
+                MultiCellBuffer cell = new MultiCellBuffer();
+                cell.SetOneCell(encoded);
+            }
+
+            _previousPrice = e.Price;
+
+        }
     }
 }
-
