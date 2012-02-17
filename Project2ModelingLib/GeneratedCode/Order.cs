@@ -8,77 +8,121 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 public class Order
 {
-	private string senderId
+    /// <summary>
+    /// The identity of the sender.
+    /// </summary>
+    private string senderId;
+
+    /// <summary>
+    /// the credit card number.
+    /// </summary>
+    private int cardNo;
+
+    /// <summary>
+    /// the number of chickens to purchase.
+    /// </summary>
+    private int amount;
+
+    /// <summary>
+    /// The identity of the sender.
+    /// </summary>
+    public string SenderId
+    {
+        get { return senderId; }
+        set { senderId = value; }
+    }
+
+    /// <summary>
+    /// the credit card number.
+    /// </summary>
+    public int CardNo
+    {
+        get { return cardNo; }
+        set { cardNo = value; }
+    }
+
+    /// <summary>
+    /// the number of chickens to purchase.
+    /// </summary>
+    public int Amount
+    {
+        get { return amount; }
+        set { amount = value; }
+    }
+
+    /// <summary>
+    /// Encodes the order into a string type.
+    /// </summary>
+    /// <returns>The order encoded as a string.</returns>
+    public virtual string Encode()
+    {
+        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(this.GetType());
+        StringWriter writer = new StringWriter();
+        serializer.Serialize(writer, this);
+        return writer.ToString();
+    }
+
+    /// <summary>
+    /// Creates an order object from a encoded order string.
+    /// </summary>
+    /// <param name="orderString">The string representing the order.</param>
+    /// <returns>The order.</returns>
+    public static Order Decode(string orderString)
+    {
+        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Order));
+        StringReader reader = new StringReader(orderString);
+        return (Order) serializer.Deserialize(reader);
+    }
+
+    public DateTime CreatedTime
 	{
 		get;
 		set;
 	}
 
-	private int cardNo
+
+
+	public TimeSpan OrderTime
 	{
 		get;
 		set;
 	}
 
-	private int amount
+
+
+    // These are to meet requirements. C# uses properties so use the properties instead.
+	public virtual void setID(string id)
 	{
-		get;
-		set;
+        senderId = id;
 	}
 
-	private DateTime receiveTime
+	public virtual string getID()
 	{
-		get;
-		set;
+        return senderId;
 	}
 
-	private TimeSpan orderTime
+	public virtual void setCardNo(int number)
 	{
-		get;
-		set;
+        cardNo = number;
 	}
 
-	public virtual void SetID(string id)
+	public virtual int getCardNo()
 	{
-		throw new System.NotImplementedException();
+        return cardNo;
 	}
 
-	public virtual string GetID()
+	public virtual int getAmount()
 	{
-		throw new System.NotImplementedException();
+        return amount;
 	}
 
-	public virtual void SetCardNo(int number)
+	public virtual void setAmount(int amt)
 	{
-		throw new System.NotImplementedException();
-	}
-
-	public virtual int GetCardNo()
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public virtual int GetAmount()
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public virtual void SetAmount(int amt)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public virtual string Encode()
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public static Order Decode(string orderString)
-	{
-		throw new System.NotImplementedException();
+        amount = amt;
 	}
 
 }
