@@ -12,7 +12,7 @@ using System.Threading;
 
 public class Retailer
 {
-    private double _currentPrice;
+    private double _previousPrice = 0;
 
     public virtual void RetailerFunc()
     {
@@ -29,7 +29,6 @@ public class Retailer
             //send encoded string to free cell in multiCellBuffer
             MultiCellBuffer cell = new MultiCellBuffer();
             cell.SetOneCell(encoded);
-
         }
     }
 
@@ -39,15 +38,9 @@ public class Retailer
         TimeSpan elapsedTime = timeReceive - orderObj.CreatedTime;
 
         Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
-
-        //few questions:
-        //1) orderTime/receiveTime would have to be public? Or is order time completion handled 
-        //   in the order class, and order time printed out here as opposed to the order completion
-        //   event to be handled by retailer.\?  
-        //2) multiCellBuffer needs to take in a string?
     }
 
-    public virtual void OnPriceCut() //event handler
+    public virtual void OnPriceCut(object src, EventArgs e) //event handler
 	{
         //Each retailer contains a call-back
         //method (event handler) for the ChickenFarm to call when a price-cut
@@ -56,14 +49,20 @@ public class Retailer
         //the previous price and the current price. The thread will terminate
         //after the ChickenFarm thread has terminated. 
 
+        //if it's 0
+        //set previousprice = to current
+        //else previousPrice - currentPrice
 
+        if (_previousPrice == 0)
+        {
+            _previousPrice = e
+        }
+        else
+        {
+           
+        }
 
-
-        //store previous price shomewhere
-
-        //previousPrice - currentPrice --> what are we doing with this value? return to ChickenFarm
-
-        //Console.WriteLine("Store{0} chickens are on sale: as low as ${1} each", Thread.CurrentThread.Name, p);
+        Console.WriteLine("Store{0} chickens are on sale: as low as ${1} each", Thread.CurrentThread.Name, p);
 	    
         //terminate if chickenfarm thread has terminated
        // Thread.CurrentThread.Abort;

@@ -16,7 +16,7 @@ public class MultiCellBuffer
 		throw new System.NotImplementedException();
 	}
 
-	public virtual void SetOneCell()
+	public virtual void SetOneCell(string encoded)
 	{
 		throw new System.NotImplementedException();
 	}
