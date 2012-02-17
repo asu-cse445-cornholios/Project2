@@ -9,19 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Project2ModelingLib
+public class MultiCellBuffer
 {
-    public class MultiCellBuffer
-    {
-        public virtual void GetOneCell()
-        {
-            throw new System.NotImplementedException();
-        }
+	public virtual void GetOneCell()
+	{
+		throw new System.NotImplementedException();
+	}
 
-        public virtual void SetOneCell()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+	public virtual void SetOneCell(string encoded)
+	{
+		throw new System.NotImplementedException();
+	}
+
 }
 
