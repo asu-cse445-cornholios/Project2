@@ -12,7 +12,8 @@ using System.Threading;
 
 public class Retailer
 {
-    private static Semaphore _sema;
+    private double _currentPrice;
+
     public virtual void RetailerFunc()
     {
         Order orderObj = new Order();
@@ -23,32 +24,30 @@ public class Retailer
             //sends order to encoder
             string encoded = orderObj.Encode();
             
-            //get time stamp before sending
-            DateTime timeStamp = orderObj.receiveTime;
+            orderObj.CreatedTime = DateTime.UtcNow;
 
             //send encoded string to free cell in multiCellBuffer
             MultiCellBuffer cell = new MultiCellBuffer();
             cell.SetOneCell(encoded);
 
-            //order completion received (EVENT SUBSCRIPTION/CALLBACK)
-           //use semaphore
-            _sema.WaitOne();
-            //Thread.Sleep(100);
-
-            DateTime timeReceive = orderObj.receiveTime;
-            TimeSpan elapsedTime = timeReceive - timeStamp;
-
-            Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
-
-            //few questions:
-            //1) orderTime/receiveTime would have to be public? Or is order time completion handled 
-            //   in the order class, and order time printed out here as opposed to the order completion
-            //   event to be handled by retailer.\?  
-            //2) multiCellBuffer needs to take in a string?
         }
     }
 
-	public virtual void OnPriceCut() //event handler
+    private static void CallBack(Order orderObj)
+    {
+        DateTime timeReceive = DateTime.UtcNow;
+        TimeSpan elapsedTime = timeReceive - orderObj.CreatedTime;
+
+        Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
+
+        //few questions:
+        //1) orderTime/receiveTime would have to be public? Or is order time completion handled 
+        //   in the order class, and order time printed out here as opposed to the order completion
+        //   event to be handled by retailer.\?  
+        //2) multiCellBuffer needs to take in a string?
+    }
+
+    public virtual void OnPriceCut() //event handler
 	{
         //Each retailer contains a call-back
         //method (event handler) for the ChickenFarm to call when a price-cut
@@ -57,9 +56,9 @@ public class Retailer
         //the previous price and the current price. The thread will terminate
         //after the ChickenFarm thread has terminated. 
 
-        ChickenFarm chicken = new ChickenFarm();
-        
-        int currentPrice = chicken.GetPrice();
+
+
+
         //store previous price shomewhere
 
         //previousPrice - currentPrice --> what are we doing with this value? return to ChickenFarm
