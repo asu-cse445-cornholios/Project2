@@ -9,22 +9,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class OrderProcessor
+namespace Project2ModelingLib
 {
-	public virtual bool CheckCreditCard(int ccNumber)
-	{
-		throw new System.NotImplementedException();
-	}
+    public class OrderProcessor
+    {
+        public virtual bool CheckCreditCard(int ccNumber)
+        {
+            throw new System.NotImplementedException();
+        }
 
-	public virtual int CalculateCharge(int chickens, int unitPrice)
-	{
-		throw new System.NotImplementedException();
-	}
+        public virtual int CalculateCharge(int chickens, int unitPrice)
+        {
+            throw new System.NotImplementedException();
+        }
 
-	public virtual void ProcessOrder()
-	{
-		throw new System.NotImplementedException();
-	}
-
+        public virtual void ProcessOrder()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
 

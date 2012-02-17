@@ -9,25 +9,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class ChickenFarm
+namespace Project2ModelingLib
 {
-	private int chickenPrice;
+    public class ChickenFarm
+    {
+        private int chickenPrice;
+        private int _numberOfPriceCuts;
 
+        public virtual int GetPrice()
+        {
+            throw new System.NotImplementedException();
+        }
 
-	public virtual int GetPrice()
-	{
-		throw new System.NotImplementedException();
-	}
+        public virtual void ChangePrice()
+        {
+            throw new System.NotImplementedException();
+        }
 
-	public virtual void ChangePrice()
-	{
-		throw new System.NotImplementedException();
-	}
+        public virtual void FarmerFunc()
+        {
+            throw new System.NotImplementedException();
+        }
 
-	public virtual void FarmerFunc()
-	{
-		throw new System.NotImplementedException();
-	}
-
+    }
 }
-
