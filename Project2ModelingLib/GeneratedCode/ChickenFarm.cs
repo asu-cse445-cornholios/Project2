@@ -8,28 +8,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Project2ModelingLib
 {
     public class ChickenFarm
     {
-        private int chickenPrice;
+        private int _chickenPrice;
         private int _numberOfPriceCuts;
 
-        public virtual int GetPrice()
+        private List<double> _prices = new List<double>();
+
+        public event EventHandler<PriceCutEventArgs> PriceCutEvent;
+
+        public void OnPriceCutEvent(PriceCutEventArgs e)
         {
-            throw new System.NotImplementedException();
+            var handler = PriceCutEvent;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
-        public virtual void ChangePrice()
+        public ChickenFarm()
         {
-            throw new System.NotImplementedException();
+            _prices.Add(11.45);
+            _prices.Add(14.29);
+            _prices.Add(32.34);
+            _prices.Add(24.29);
+            _prices.Add(13.07);
+            _prices.Add(36.75);
+            _prices.Add(38.49);
+            _prices.Add(13.26);
+            _prices.Add(35.53);
+            _prices.Add(12.54);
+            _prices.Add(20.83);
+            _prices.Add(43.70);
+            _prices.Add(25.50);
+            _prices.Add(32.80);
+            _prices.Add(13.09);
+            _prices.Add(19.97);
+            _prices.Add(31.85);
+            _prices.Add(26.80);
+            _prices.Add(24.11);
+            _prices.Add(26.67);
+            _prices.Add(40.32);
+            _prices.Add(41.39);
+            _prices.Add(28.54);
+            _prices.Add(35.95);
+            _prices.Add(30.46);
+            _prices.Add(34.65);
+            _prices.Add(38.96);
+            _prices.Add(12.23);
+            _prices.Add(24.12);
+            _prices.Add(41.71);
+            _prices.Add(29.20);
         }
-
-        public virtual void FarmerFunc()
-        {
-            throw new System.NotImplementedException();
-        }
-
     }
 }

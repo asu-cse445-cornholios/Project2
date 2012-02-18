@@ -49,10 +49,10 @@
     <Compile Include="GeneratedCode\MultiCellBuffer.cs">
       <SourceModelReference>modelbus://ModelStoreAdapter.1.0/Project2Modeling/MultiCellBuffer/C:\P\CSE445\Project2\Project2Modeling\Project2Modeling.modelproj%252f9bc1b4f4-1b9b-4c6e-8dab-5c2340b223ab</SourceModelReference>
     </Compile>
-    <Compile Include="GeneratedCode\Order.cs">
+    <Compile Include="GeneratedCode\OrderClass.cs">
       <SourceModelReference>modelbus://ModelStoreAdapter.1.0/Project2Modeling/Order/C:\P\CSE445\Project2\Project2Modeling\Project2Modeling.modelproj%252f2ce1adc3-ef6c-4503-82ce-7f443bc3f30b</SourceModelReference>
     </Compile>
-    <Compile Include="GeneratedCode\OrderProcessor.cs">
+    <Compile Include="GeneratedCode\OrderProcessing.cs">
       <SourceModelReference>modelbus://ModelStoreAdapter.1.0/Project2Modeling/OrderProcessor/C:\P\CSE445\Project2\Project2Modeling\Project2Modeling.modelproj%252ffb707795-78b4-4781-a755-67b2a3175ce1</SourceModelReference>
     </Compile>
     <Compile Include="GeneratedCode\Project2Application.cs">

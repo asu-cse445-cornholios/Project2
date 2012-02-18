@@ -16,17 +16,15 @@ namespace Project2ModelingLib
     {
         private double _previousPrice = 0;
 
-        private static void CallBack(Order orderObj)
+        private static void CallBack(OrderClass OrderObject)
         {
             DateTime timeReceive = DateTime.UtcNow;
-            TimeSpan elapsedTime = timeReceive - orderObj.CreatedTime;
+            TimeSpan elapsedTime = timeReceive - OrderObject.CreatedTime;
 
             Console.WriteLine("Time of order{0}: {1}", Thread.CurrentThread.Name, elapsedTime);
         }
 
-        public event EventHandler<PriceCutEventArgs> PriceCutEvent;
-
-        public virtual void OnPriceCut(object src, PriceCutEventArgs e) //event handler
+        public void OnPriceCut(object src, PriceCutEventArgs e) //event handler
 	    {
             int numChickens;
 
@@ -35,11 +33,11 @@ namespace Project2ModelingLib
                 numChickens = 100 + 2 * (int)(_previousPrice - e.Price);
                 
                 Random rand = new Random();
-                Order orderObj = new Order { Amount = numChickens, SenderId = Thread.CurrentThread.Name, 
+                OrderClass OrderObject = new OrderClass { Amount = numChickens, SenderId = Thread.CurrentThread.Name, 
                     CreatedTime = DateTime.UtcNow, CardNo = rand.Next(5000,7000)};
 
                 //sends order to encoder
-                string encoded = orderObj.Encode();
+                string encoded = OrderObject.Encode();
 
                 //send encoded string to free cell in multiCellBuffer
                 MultiCellBuffer cell = new MultiCellBuffer();

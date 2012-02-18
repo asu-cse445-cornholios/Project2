@@ -4,20 +4,19 @@
 //     Changes to this file will be lost if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Project2ModelingLib
 {
-    public class Order
+    public class OrderClass
     {
         /// <summary>
-        /// The identity of the sender.
+        /// the number of chickens to purchase.
         /// </summary>
-        private string senderId;
+        private int amount;
 
         /// <summary>
         /// the credit card number.
@@ -25,9 +24,9 @@ namespace Project2ModelingLib
         private int cardNo;
 
         /// <summary>
-        /// the number of chickens to purchase.
+        /// The identity of the sender.
         /// </summary>
-        private int amount;
+        private string senderId;
 
         /// <summary>
         /// The identity of the sender.
@@ -56,15 +55,20 @@ namespace Project2ModelingLib
             set { amount = value; }
         }
 
+        public DateTime CreatedTime { get; set; }
+
+
+        public TimeSpan OrderTime { get; set; }
+
         /// <summary>
         /// Encodes the order into a string type.
         /// </summary>
         /// <returns>The order encoded as a string.</returns>
-        public virtual string Encode()
+        public string Encode()
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(this.GetType());
-            StringWriter writer = new StringWriter();
+            var serializer =
+                new XmlSerializer(typeof (OrderClass));
+            var writer = new StringWriter();
             serializer.Serialize(writer, this);
             return writer.ToString();
         }
@@ -74,53 +78,44 @@ namespace Project2ModelingLib
         /// </summary>
         /// <param name="orderString">The string representing the order.</param>
         /// <returns>The order.</returns>
-        public static Order Decode(string orderString)
+        public static OrderClass Decode(string orderString)
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof (Order));
-            StringReader reader = new StringReader(orderString);
-            return (Order) serializer.Deserialize(reader);
+            var serializer =
+                new XmlSerializer(typeof (OrderClass));
+            var reader = new StringReader(orderString);
+            return (OrderClass) serializer.Deserialize(reader);
         }
-
-        public DateTime CreatedTime { get; set; }
-
-
-
-        public TimeSpan OrderTime { get; set; }
-
 
 
         // These are to meet requirements. C# uses properties so use the properties instead.
-        public virtual void setID(string id)
+        public void setID(string id)
         {
             senderId = id;
         }
 
-        public virtual string getID()
+        public string getID()
         {
             return senderId;
         }
 
-        public virtual void setCardNo(int number)
+        public void setCardNo(int number)
         {
             cardNo = number;
         }
 
-        public virtual int getCardNo()
+        public int getCardNo()
         {
             return cardNo;
         }
 
-        public virtual int getAmount()
+        public int getAmount()
         {
             return amount;
         }
 
-        public virtual void setAmount(int amt)
+        public void setAmount(int amt)
         {
             amount = amt;
         }
-
     }
 }
-

@@ -11,21 +11,27 @@ using System.Text;
 
 namespace Project2ModelingLib
 {
-    public class OrderProcessor
+    public class MultiCellBuffer
     {
-        public virtual bool CheckCreditCard(int ccNumber)
+        public virtual void GetOneCell()
         {
             throw new System.NotImplementedException();
         }
 
-        public virtual int CalculateCharge(int chickens, int unitPrice)
+        public virtual void SetOneCell(string encoded)
         {
             throw new System.NotImplementedException();
         }
 
-        public virtual void ProcessOrder()
+        public event EventHandler<NewCellEventArgs> NewCellEvent;
+
+        public void OnNewCellEvent(NewCellEventArgs e)
         {
-            throw new System.NotImplementedException();
+            EventHandler<NewCellEventArgs> handler = NewCellEvent;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }
