@@ -15,7 +15,7 @@ namespace Project2
 
             var chickenFarm = new ChickenFarm();
             var chickenFarmer = new Thread(chickenFarm.FarmSomeChickens) {Name = "TheChickenFarmer"};
-            chickenFarmer.Start();
+            
             var chickenStore = new Retailer(m);
             chickenFarm.PriceCut += chickenStore.OnPriceCut;
             var retailers = new Thread[n];
@@ -25,6 +25,7 @@ namespace Project2
 
                 retailers[index].Start();
             }
+            chickenFarmer.Start();
             chickenFarmer.Join();
 
             // TODO: Exit Retailer threads

@@ -17,7 +17,7 @@ namespace Project2
 
         private int p; //farm lifelength
         private DateTime timeFarmStarted;
-
+        private System.Timers.Timer updatePriceTimer = new System.Timers.Timer { Interval = 500 };
         public ChickenFarm()
         {
             prices.Add(11.45);
@@ -74,7 +74,8 @@ namespace Project2
             timeFarmStarted = DateTime.UtcNow;
             UpdatePrice();
             var multiCellBuffer = new MultiCellBuffer();
-            var updatePriceTimer = new System.Timers.Timer {Interval = 500};
+            
+            updatePriceTimer.Start();
             updatePriceTimer.Elapsed += UpdatePriceTimerElapsed;
             while (p < 10)
             {
@@ -83,15 +84,18 @@ namespace Project2
                 var orderProcessing = new OrderProcessing(newOrder, GetPrice());
                 var OrderProcessingThread = new Thread(orderProcessing.ProcessOrder);
                 OrderProcessingThread.Start();
-                UpdatePrice();
             }
+
+            updatePriceTimer.Stop();
 
             Console.WriteLine("Total Time: {0}", DateTime.UtcNow - timeFarmStarted);
         }
 
         private void UpdatePriceTimerElapsed(object sender, ElapsedEventArgs e)
         {
+            updatePriceTimer.Enabled = false;
             UpdatePrice();
+            updatePriceTimer.Enabled = true;
         }
 
         private double GetPrice()
