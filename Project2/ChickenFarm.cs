@@ -15,7 +15,7 @@ namespace Project2
         private readonly List<double> prices = new List<double>();
         private double chickenPrice = 10.00;
 
-        private int p;
+        private int p; //farm lifelength
         private DateTime timeFarmStarted;
 
         public ChickenFarm()

@@ -51,6 +51,7 @@ namespace Project2
             var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset,
                                                       Thread.CurrentThread.Name);
             eventWaitHandle.WaitOne();
+
             DateTime timeReceive = DateTime.UtcNow;
             TimeSpan elapsedTime = timeReceive - timeSent;
 

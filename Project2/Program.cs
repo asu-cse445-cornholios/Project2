@@ -10,8 +10,8 @@ namespace Project2
     {
         private static void Main(string[] args)
         {
-            var n = int.Parse(args[0]);
-            var m = int.Parse(args[1]);
+            var n = 10;// = int.Parse(args[0]); //retailer
+            var m = 5;// int.Parse(args[1]); //number of orders
 
             var chickenFarm = new ChickenFarm();
             var chickenFarmer = new Thread(chickenFarm.FarmSomeChickens) {Name = "TheChickenFarmer"};
