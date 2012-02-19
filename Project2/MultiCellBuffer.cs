@@ -14,16 +14,25 @@ namespace Project2
             new BlockingCollection<string>(10);
 
 
-        public string GetOneCell()
+        public string GetOneCell(CancellationToken cancellationToken)
         {
-            return buffer.Take();
+            string returnValue = null;
+            //try
+            //{
+                 returnValue = buffer.Take(cancellationToken);
+            //}
+            //catch
+            //{
+                
+            //}
+            return returnValue;
         }
 
         //sets an available cell in the buffer
         //call is blocked if no available cells
-        public void SetOneCell(string order)
+        public void SetOneCell(string order, CancellationToken cancellationToken)
         {
-            buffer.Add(order);
+            buffer.Add(order, cancellationToken);
         }
     }
 }

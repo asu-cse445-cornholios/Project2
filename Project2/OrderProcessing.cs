@@ -28,29 +28,21 @@ namespace Project2
 
         private double CalculateCharge(int chickens, double unitPrice)
         {
-            double total = chickens*(unitPrice + ShippingHandlingRatePerChicken);
-            return TaxRate*total + total;
+            double total = chickens * (unitPrice + ShippingHandlingRatePerChicken);
+            return TaxRate * total + total;
         }
 
         public void ProcessOrder()
         {
-            int chickens;
-            int ccNumber;
-            string senderId;
-            lock (OrderObject)
-            {
-                chickens = OrderObject.Amount;
-                ccNumber = OrderObject.CardNo;
-                senderId = OrderObject.SenderId;
-            }
-            if (!CheckCreditCard(ccNumber))
+            if (!CheckCreditCard(OrderObject.CardNo))
             {
                 throw new Exception("Invalid Credit Card.");
             }
-            double finalCharge = CalculateCharge(chickens, chickenPrice);
+            double finalCharge = CalculateCharge(OrderObject.Amount, chickenPrice);
             var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset,
-                                                      senderId);
-            eventWaitHandle.Reset();
+                                                       OrderObject.SenderId);
+            eventWaitHandle.Set();
+            System.Console.WriteLine("Order from {0}\n\tAmount: {1}\n\tCredit Card Number: {2}\n\tChicken Price: {3}\n\tOrder Cost: {4}\n", OrderObject.SenderId, OrderObject.Amount, OrderObject.CardNo, chickenPrice, finalCharge);
         }
     }
 }

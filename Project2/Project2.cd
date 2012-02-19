@@ -21,7 +21,7 @@
   <Class Name="Project2.OrderClass">
     <Position X="9.75" Y="1" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AEAAAAAAAABAAACIAIABEAGAIAABgBAAAAAQQAAACAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAACIAMABEAGAAAABgBAAAAAQQAAACAE=</HashCode>
       <FileName>OrderClass.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -31,7 +31,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAgAAAABAAAAAACAgAAAAAAAAAAAACAAAAAAAACAAAI=</HashCode>
+      <HashCode>AAgAAAABAAAAAACAgAAAAAAAAAAAACAAAAAQAAAAAAI=</HashCode>
       <FileName>OrderProcessing.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -45,7 +45,7 @@
   <Class Name="Project2.Retailer">
     <Position X="4.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAACAAABAAAAAAABAAAAAAAAAAAgAAAAAgAAAAAAAA=</HashCode>
+      <HashCode>AAAACAAABAAAAAAQAAAAAAAAAAAAgAAAAAgAAEAAAAA=</HashCode>
       <FileName>Retailer.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -53,7 +53,6 @@
     <Position X="3.5" Y="4.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAJEAAAAAAAAAAAAAAAAACAABAAAAAAAA=</HashCode>
