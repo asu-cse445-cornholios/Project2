@@ -13,7 +13,7 @@ namespace Project2
     {
         private double chickenPrice;
         private readonly object syncRoot = new object();
-        private bool shouldOrder;
+        private bool priceCut;
         private volatile bool shouldStop;
         private CancellationTokenSource cancelSource = new CancellationTokenSource();
         private DateTime timeSent;
@@ -27,7 +27,7 @@ namespace Project2
             lock (syncRoot)
             {
                 chickenPrice = e.Price;
-                shouldOrder = true;
+                priceCut = true;
                 Monitor.PulseAll(syncRoot);
             }
         }
@@ -36,11 +36,6 @@ namespace Project2
         {
             shouldStop = true;
            //cancelSource.Cancel();
-            lock (syncRoot)
-            {
-                shouldOrder = true;
-                Monitor.PulseAll(syncRoot);
-            }
         }
 
         public void RunStore()
@@ -55,15 +50,12 @@ namespace Project2
                 // Wait for price cut
                 lock (syncRoot)
                 {
-                    while (!shouldOrder)
+                    while (!priceCut)
                     {
                         Monitor.Wait(syncRoot);
                     }
-                    shouldOrder = false;
-                    Monitor.PulseAll(syncRoot);
+                    priceCut = false;
                 }
-                if (shouldStop)
-                    return;
                 // Determine what to order
 
                 // Put in order
