@@ -11,28 +11,37 @@ namespace Project2
     public class MultiCellBuffer
     {
         private static readonly BlockingCollection<string> buffer =
-            new BlockingCollection<string>(10);
+            new BlockingCollection<string>(8);
 
 
-        public string GetOneCell(CancellationToken cancellationToken)
+        private CancellationToken token;
+
+        public MultiCellBuffer(CancellationToken token)
         {
-            string returnValue = null;
-            //try
-            //{
-                 returnValue = buffer.Take(cancellationToken);
-            //}
-            //catch
-            //{
-                
-            //}
-            return returnValue;
+            this.token = token;
+        }
+
+        public bool GetOneCell(out string cell)
+        {
+            if (token.IsCancellationRequested)
+            {
+                // observe cancellation 
+                throw new OperationCanceledException(token); // acknowledge cancellation 
+            }
+
+            return buffer.TryTake(out cell, 500, token); ;
         }
 
         //sets an available cell in the buffer
         //call is blocked if no available cells
-        public void SetOneCell(string order, CancellationToken cancellationToken)
+        public void SetOneCell(string order)
         {
-            buffer.Add(order, cancellationToken);
+            if (token.IsCancellationRequested)
+            {
+                // observe cancellation 
+                throw new OperationCanceledException(token); // acknowledge cancellation 
+            }
+            buffer.Add(order, token);
         }
     }
 }

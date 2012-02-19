@@ -18,13 +18,8 @@ namespace Project2
         private DateTime timeLastOrdered;
         private System.Timers.Timer updatePriceTimer = new System.Timers.Timer { Interval = 500 };
         private double averageNumberOfChickens;
-        private CancellationTokenSource cancelSource = new CancellationTokenSource();
         private object syncRoot = new object();
-        private bool shouldRun = true;
-
-        public ChickenFarm()
-        {
-        }
+        private CancellationTokenSource cancelSource = new CancellationTokenSource();
 
         public event EventHandler<PriceCutEventArgs> PriceCut;
 
@@ -37,6 +32,11 @@ namespace Project2
             }
         }
 
+        public CancellationToken GetToken()
+        {
+            return cancelSource.Token;
+        }
+
         private double PricingModel()
         {
             if ((DateTime.UtcNow - timeLastOrdered).Milliseconds > 500)
@@ -45,45 +45,41 @@ namespace Project2
             }
             else
             {
-                return 1 + 1 * (averageNumberOfChickens);
+                return 6.50 + 1.3 * (averageNumberOfChickens - 1);
             }
         }
 
         public void FarmSomeChickens()
         {
+            CancellationToken token = cancelSource.Token;
             timeFarmStarted = DateTime.UtcNow;
             UpdatePrice();
-            var multiCellBuffer = new MultiCellBuffer();
+            var multiCellBuffer = new MultiCellBuffer(token);
             
-            updatePriceTimer.Start();
-            updatePriceTimer.Elapsed += UpdatePriceTimerElapsed;
-            while (shouldRun)
+            while (!token.IsCancellationRequested)
             {
                 try
                 {
-                    var newOrderEncoded = multiCellBuffer.GetOneCell(cancelSource.Token);
-                    var newOrder = OrderClass.Decode(newOrderEncoded);
-                    averageNumberOfChickens = (newOrder.Amount + averageNumberOfChickens) / 2;
-                    timeLastOrdered = DateTime.UtcNow;
-                    var orderProcessing = new OrderProcessing(newOrder, GetPrice());
-                    var OrderProcessingThread = new Thread(orderProcessing.ProcessOrder) { Name = "OrderProcessing" + newOrder.SenderId };
-                    OrderProcessingThread.Start();
+                    string newOrderEncoded;
+                    bool completed = multiCellBuffer.GetOneCell(out newOrderEncoded);
+                    if (completed)
+                    {
+                        var newOrder = OrderClass.Decode(newOrderEncoded);
+                        averageNumberOfChickens = (newOrder.Amount + averageNumberOfChickens)/2;
+                        timeLastOrdered = DateTime.UtcNow;
+                        var orderProcessing = new OrderProcessing(newOrder, GetPrice());
+                        var OrderProcessingThread = new Thread(orderProcessing.ProcessOrder)
+                                                        {Name = "OrderProcessing" + newOrder.SenderId};
+                        OrderProcessingThread.Start();
+                    }
+                    UpdatePrice();
                 }
                 catch (OperationCanceledException e)
                 {
+
                 }
             }
-
-            updatePriceTimer.Stop();
-
             Console.WriteLine("Total Time: {0}", DateTime.UtcNow - timeFarmStarted);
-        }
-
-        private void UpdatePriceTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            updatePriceTimer.Enabled = false;
-            UpdatePrice();
-            updatePriceTimer.Enabled = true;
         }
 
         private double GetPrice()
@@ -114,11 +110,7 @@ namespace Project2
                         p++;
                         if (p > 10)
                         {
-                            shouldRun = false;
-                            if (!cancelSource.IsCancellationRequested)
-                            {
-                                cancelSource.Cancel();
-                            }
+                            cancelSource.Cancel();
                         }
                     }
                 }

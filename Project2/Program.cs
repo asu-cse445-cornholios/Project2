@@ -13,12 +13,12 @@ namespace Project2
             var n = 10;// = int.Parse(args[0]); //retailer
 
             var chickenFarm = new ChickenFarm();
+            var token = chickenFarm.GetToken();
             var chickenFarmer = new Thread(chickenFarm.FarmSomeChickens) {Name = "TheChickenFarmer"};
-            
-            var chickenStore = new Retailer();
+            var chickenStore = new Retailer(token);
             chickenFarm.PriceCut += chickenStore.OnPriceCut;
             var retailerThreads = new Thread[n];
-            for (var index = 0; index < retailerThreads.Length - 1; index++)
+            for (var index = 0; index < retailerThreads.Length; index++)
             {
                 retailerThreads[index] = new Thread(chickenStore.RunStore) {Name = "Retailer" + (index + 1)};
                 retailerThreads[index].Start();
@@ -26,8 +26,7 @@ namespace Project2
             }
             chickenFarmer.Start();
             chickenFarmer.Join();
-            chickenStore.RequestStop();
-
+            System.Console.WriteLine("Done");
         }
     }
 }
