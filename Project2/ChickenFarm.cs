@@ -3,23 +3,21 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
-using System.Timers;
 
 namespace Project2
 {
     public class ChickenFarm
     {
+        private readonly CancellationTokenSource cancelSource = new CancellationTokenSource();
         private readonly ReaderWriterLockSlim chickenPriceReaderWriterLockSlim = new ReaderWriterLockSlim();
+        private readonly object syncRoot = new object();
+        private double averageNumberOfChickens;
         private double chickenPrice = 10.00;
         private int p; //farm lifelength
         private DateTime timeFarmStarted;
         private DateTime timeLastOrdered;
-        private System.Timers.Timer updatePriceTimer = new System.Timers.Timer { Interval = 500 };
-        private double averageNumberOfChickens;
-        private object syncRoot = new object();
-        private CancellationTokenSource cancelSource = new CancellationTokenSource();
 
         public event EventHandler<PriceCutEventArgs> PriceCut;
 
@@ -39,13 +37,13 @@ namespace Project2
 
         private double PricingModel()
         {
-            if ((DateTime.UtcNow - timeLastOrdered).Milliseconds > 500)
+            if ((DateTime.UtcNow - timeLastOrdered).Milliseconds > 85)
             {
-                return chickenPrice - 1.50;
+                return chickenPrice - .65;
             }
             else
             {
-                return 6.50 + 1.3 * (averageNumberOfChickens - 1);
+                return 6.50 + .5*(averageNumberOfChickens - 1);
             }
         }
 
@@ -55,17 +53,16 @@ namespace Project2
             timeFarmStarted = DateTime.UtcNow;
             UpdatePrice();
             var multiCellBuffer = new MultiCellBuffer(token);
-            
+
             while (!token.IsCancellationRequested)
             {
                 try
                 {
                     string newOrderEncoded;
-                    bool completed = multiCellBuffer.GetOneCell(out newOrderEncoded);
-                    if (completed)
+                    if (multiCellBuffer.GetOneCell(out newOrderEncoded))
                     {
                         var newOrder = OrderClass.Decode(newOrderEncoded);
-                        averageNumberOfChickens = (newOrder.Amount + averageNumberOfChickens)/2;
+                        averageNumberOfChickens = (newOrder.Amount + averageNumberOfChickens)/2.0;
                         timeLastOrdered = DateTime.UtcNow;
                         var orderProcessing = new OrderProcessing(newOrder, GetPrice());
                         var OrderProcessingThread = new Thread(orderProcessing.ProcessOrder)
@@ -76,10 +73,10 @@ namespace Project2
                 }
                 catch (OperationCanceledException e)
                 {
-
+                    Debug.WriteLine("A cancellation for {0} is requested.", Thread.CurrentThread.Name);
                 }
             }
-            Console.WriteLine("Total Time: {0}", DateTime.UtcNow - timeFarmStarted);
+            Console.WriteLine("Total Time: {0} ms", (DateTime.UtcNow - timeFarmStarted).Milliseconds);
         }
 
         private double GetPrice()
@@ -101,16 +98,19 @@ namespace Project2
             try
             {
                 double previousPrice = chickenPrice;
-                chickenPrice = PricingModel();
+                chickenPrice = Math.Round(PricingModel(), 2);
                 if (chickenPrice < previousPrice)
                 {
-                    OnPriceCut(new PriceCutEventArgs(chickenPrice));
                     lock (syncRoot)
                     {
                         p++;
                         if (p > 10)
                         {
                             cancelSource.Cancel();
+                        }
+                        else
+                        {
+                            OnPriceCut(new PriceCutEventArgs(chickenPrice));
                         }
                     }
                 }

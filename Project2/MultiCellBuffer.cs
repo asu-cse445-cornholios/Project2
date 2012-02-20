@@ -3,8 +3,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Threading;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Project2
 {
@@ -29,7 +29,7 @@ namespace Project2
                 throw new OperationCanceledException(token); // acknowledge cancellation 
             }
 
-            return buffer.TryTake(out cell, 500, token); ;
+            return buffer.TryTake(out cell, 500, token);
         }
 
         //sets an available cell in the buffer

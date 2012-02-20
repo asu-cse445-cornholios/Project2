@@ -10,7 +10,7 @@ namespace Project2
     {
         private static void Main(string[] args)
         {
-            var n = 10;// = int.Parse(args[0]); //retailer
+            var n = 10;
 
             var chickenFarm = new ChickenFarm();
             var token = chickenFarm.GetToken();
@@ -22,11 +22,17 @@ namespace Project2
             {
                 retailerThreads[index] = new Thread(chickenStore.RunStore) {Name = "Retailer" + (index + 1)};
                 retailerThreads[index].Start();
-                while (!retailerThreads[index].IsAlive);
+                while (!retailerThreads[index].IsAlive)
+                {
+                    ;
+                }
             }
             chickenFarmer.Start();
             chickenFarmer.Join();
-            System.Console.WriteLine("Done");
+            foreach (var retailerThread in retailerThreads)
+            {
+                retailerThread.Join();
+            }
         }
     }
 }

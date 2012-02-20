@@ -4,23 +4,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace Project2
 {
     public class Retailer
     {
-        private double chickenPrice;
+        private readonly ManualResetEvent priceCutManualResetEvent = new ManualResetEvent(false);
         private readonly object syncRoot = new object();
-        private volatile bool shouldStop;
+        private double chickenPrice;
         private DateTime timeSent;
         private CancellationToken token;
-        private ManualResetEvent priceCutManualResetEvent = new ManualResetEvent(false);
 
         public Retailer(CancellationToken cancellationToken)
         {
-            this.token = cancellationToken;
+            token = cancellationToken;
         }
 
         public void OnPriceCut(object src, PriceCutEventArgs e) //event handler
@@ -28,29 +28,29 @@ namespace Project2
             lock (syncRoot)
             {
                 chickenPrice = e.Price;
-                priceCutManualResetEvent.Set();
             }
+            priceCutManualResetEvent.Set();
         }
 
         public void RunStore()
         {
             var orderTimes = new List<long>();
-            var random = new Random();
-            var baseChickens = random.Next(1, 10);
-            var chickenDemand = random.Next(1, 10);
-            // Wait until stop is requested
+            var baseChickens = Thread.CurrentThread.ManagedThreadId*23;
+            var chickenDemand = Thread.CurrentThread.ManagedThreadId*7/2;
+            // Loop until stop is requested
             while (!token.IsCancellationRequested)
             {
-                WaitHandle.WaitAny(new[] { priceCutManualResetEvent, token.WaitHandle });
+                WaitHandle.WaitAny(new[] {priceCutManualResetEvent, token.WaitHandle});
                 if (!token.IsCancellationRequested) //did cancellation wake us? 
                 {
+                    int numChickens;
+                    lock (syncRoot)
+                    {
+                        // Determine what to order based on price and demand.
+                        numChickens = baseChickens - chickenDemand*(int) (chickenPrice);
+                    }
 
-                    // Determine what to order
-
-                    int numChickens = baseChickens - chickenDemand*(int) (chickenPrice);
-
-                    // Put in order
-
+                    // Put in order for chickens
                     if (numChickens > 0)
                     {
                         var rand = new Random();
@@ -72,24 +72,24 @@ namespace Project2
                             // Wait for order confirmation
                             var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset,
                                                                       Thread.CurrentThread.Name);
-                            eventWaitHandle.WaitOne();
+                            WaitHandle.WaitAny(new[] {eventWaitHandle, token.WaitHandle});
 
                             DateTime timeReceive = DateTime.UtcNow;
                             TimeSpan elapsedTime = timeReceive - timeSent;
 
-                            Console.WriteLine("Time of order for {0}: {1}", Thread.CurrentThread.Name, elapsedTime);
+                            Console.WriteLine("The order for {0} took {1} ms.", Thread.CurrentThread.Name,
+                                              elapsedTime.Milliseconds);
                             orderTimes.Add(elapsedTime.Milliseconds);
-
                         }
                         catch (OperationCanceledException e)
                         {
-                            System.Console.WriteLine("Thread {0} is cancelled.", Thread.CurrentThread.Name);
+                            Debug.WriteLine("A cancellation for {0} is requested.", Thread.CurrentThread.Name);
                         }
                     }
                 }
             }
-            double averageOrderTime = orderTimes.Average();
-            System.Console.WriteLine("{0}: ARTOC: {1}", Thread.CurrentThread.Name, averageOrderTime);
+            double averageOrderTime = orderTimes.Count == 0 ? 0.0 : orderTimes.Average();
+            Console.WriteLine("{0}: ARTOC: {1} ms", Thread.CurrentThread.Name, averageOrderTime);
         }
     }
 }
