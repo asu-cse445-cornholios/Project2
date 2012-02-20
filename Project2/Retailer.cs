@@ -53,12 +53,12 @@ namespace Project2
                     // Put in order for chickens
                     if (numChickens > 0)
                     {
-                        var rand = new Random();
+                        int ccNumber = Math.Min(7000, 5000 + Thread.CurrentThread.ManagedThreadId + numChickens);
                         var OrderObject = new OrderClass
                                               {
                                                   Amount = numChickens,
                                                   SenderId = Thread.CurrentThread.Name,
-                                                  CardNo = rand.Next(5000, 7000)
+                                                  CardNo = ccNumber
                                               };
                         //sends order to encoder
                         string encoded = OrderObject.Encode();
