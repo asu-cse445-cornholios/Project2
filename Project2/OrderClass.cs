@@ -8,6 +8,15 @@ using System.Xml.Serialization;
 
 namespace Project2
 {
+    /// <summary>
+    /// OrderClass is a class that contains at least the following private data members and public methods:
+    /// senderId: the identity of the sender, you can use thread name or thread id;
+    /// cardNo: an integer that represents a credit card number;
+    /// amount: an integer that represents the number of chickens to order;
+    /// setID and getID: methods allow the users to write and read senderId member
+    /// setCardNo and getCardNo: methods allow the users to write and read cardNo member
+    /// setAmt and getAmt: methods allow the users to write and read Amount member
+    /// </summary>
     public class OrderClass
     {
         /// <summary>
@@ -64,7 +73,7 @@ namespace Project2
         public string Encode()
         {
             var serializer =
-                new XmlSerializer(typeof (OrderClass));
+                new XmlSerializer(typeof(OrderClass));
             var writer = new StringWriter();
             serializer.Serialize(writer, this);
             return writer.ToString();
@@ -78,9 +87,9 @@ namespace Project2
         public static OrderClass Decode(string orderString)
         {
             var serializer =
-                new XmlSerializer(typeof (OrderClass));
+                new XmlSerializer(typeof(OrderClass));
             var reader = new StringReader(orderString);
-            return (OrderClass) serializer.Deserialize(reader);
+            return (OrderClass)serializer.Deserialize(reader);
         }
 
 
